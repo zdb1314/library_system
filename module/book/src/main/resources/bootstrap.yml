@@ -1,0 +1,23 @@
+server:
+  port: 8080
+spring:
+  application:
+    # 应用名称
+    name: book
+  cloud:
+    nacos:
+      discovery:
+        #账号密码
+        username: nacos
+        password: nacos
+        # 服务注册地址
+        server-addr: ls-nacos:8848
+      config:
+        #账号密码
+        username: nacos
+        password: nacos
+        # 配置中心地址
+        server-addr: ls-nacos:8848
+        # 配置文件格式
+        file-extension: yml
+

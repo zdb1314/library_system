@@ -1,0 +1,81 @@
+version: '1'
+services:
+  ls-nacos:
+    image: nacos/nacos-server
+    container_name: ls-nacos
+    networks:
+      - ls-net
+    environment:
+      - MODE=standalone
+    volumes:
+      - ./nacos/logs/:/home/nacos/logs
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
+  ls-mysql:
+    container_name: ls-mysql
+    image: mysql:5.7
+    networks:
+      - ls-net
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ./mysql/logs:/logs
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: [
+      'mysqld',
+      '--innodb-buffer-pool-size=80M',
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci',
+      '--default-time-zone=+8:00',
+      '--lower-case-table-names=1'
+    ]
+    environment:
+      MYSQL_DATABASE: 'library_system'
+      MYSQL_ROOT_PASSWORD: 123456
+  ls-nginx:
+    container_name: ls-nginx
+    networks:
+      - ls-net
+    image: nginx
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/html/dist:/home/web/html/dist
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/conf.d:/etc/nginx/conf.d
+  app-api:
+    container_name: app-api
+    networks:
+      - ls-net
+    build:
+      context: ./library-system/app-api
+      dockerfile: dockerfile
+    volumes:
+      - /home/web/logs/app-api:/home/web/logs
+    ports:
+      - "8091:8091"
+    depends_on:
+      - ls-mysql
+  book:
+    container_name: book
+    networks:
+      - ls-net
+    build:
+      context: ./library-system/book
+      dockerfile: dockerfile
+    volumes:
+      - /home/web/logs/book:/home/web/logs
+    ports:
+      - "8090:8090"
+    depends_on:
+      - ls-mysql
+networks:
+  ls-net:
+    external: false
