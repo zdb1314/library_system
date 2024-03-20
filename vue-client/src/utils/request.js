@@ -1,10 +1,13 @@
 import axios from 'axios'
+import Vue from 'vue'
 
 const service = axios.create({
     baseURL: 'http://h5.library.frp.ijjk.top:28091',
     timeout: 6000
   })
-   
+  
+  Vue.prototype.$axios = service
+
   service.interceptors.request.use(
     (config) => {
       return config
@@ -25,5 +28,5 @@ const service = axios.create({
       return Promise.reject(error)
     }
   )
-   
+  
   export default service

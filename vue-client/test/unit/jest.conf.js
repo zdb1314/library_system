@@ -2,8 +2,11 @@ const path = require('path')
 
 module.exports = {
   verbose: true,
+  testURL: "http://localhost/",
   testEnvironment: 'node',
   rootDir: path.resolve(__dirname, '../../'),
+  // 测试环境，jsdom 可以在 Node 虚拟浏览器环境运行测试
+  testEnvironment: 'jsdom',
   moduleFileExtensions: [
     'js',
     'json',

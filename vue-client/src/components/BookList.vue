@@ -5,7 +5,7 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="searchBook">
         搜索图书
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleAdd">
+      <el-button class="filter-item add-btn" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleAdd">
         新增图书
       </el-button>
     </div>
@@ -13,6 +13,7 @@
     :data="bookList"
     style="width: 100%">
     <el-table-column
+      class="id-column"
       label="ID"
       prop="id">
     </el-table-column>
@@ -24,31 +25,34 @@
       align="right">
       <template slot-scope="scope">
         <el-button
+        class="edit-btn"
         type="primary"
           @click="handleEdit(scope.row)">编辑</el-button>
         <el-button
+          class="delete-btn"
           type="danger"
           @click="handleDelete(scope.row)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
 
-  <el-dialog title="图书信息" :visible.sync="dialogFormVisible">
-    <el-form ref="dataForm" :rules="rules" :model="book" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+  <el-dialog class="book-dialog" title="图书信息" :visible.sync="dialogFormVisible">
+    <el-form ref="dataForm"  :rules="rules" :model="book" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
       <el-form-item label="ID" v-if="book.id">
-        <el-input v-model="book.id" :disabled="true"/>
+        <el-input v-model="book.id" :disabled="true" />
       </el-form-item>
 
       <el-form-item label="标题">
-        <el-input v-model="book.title" placeholder="请输入标题" maxlength="50"/>
+        <el-input v-model="book.title" placeholder="请输入标题" maxlength="50" class="title-input"/>
       </el-form-item>
       
       <el-form-item label="作者">
-        <el-input v-model="book.author" placeholder="请输入作者" maxlength="50"/>
+        <el-input v-model="book.author" placeholder="请输入作者" maxlength="50" class="author-input"/>
       </el-form-item>
 
       <el-form-item label="描述">
-        <el-input v-model="book.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入描述" maxlength="256"/>
+        <el-input v-model="book.remark" :autosize="{ minRows: 2, maxRows: 4}"  class="remark-input"
+        type="textarea" placeholder="请输入描述" maxlength="256"/>
       </el-form-item>
     </el-form>
 
@@ -56,7 +60,7 @@
       <el-button @click="dialogFormVisible = false">
         取消
       </el-button>
-      <el-button type="primary" @click="saveBook">
+      <el-button class="save-btn" type="primary" @click="saveBook">
         保存
       </el-button>
     </div>
@@ -70,6 +74,7 @@
 
 <script>
 import { getBookList,addBook,updateBook,getBook,removeBook } from '@/apis/book.js'
+import { Button,Table,TableColumn,Input,Row,Form,FormItem,Dialog,Message} from 'element-ui';
 
 export default {
   name: 'BookList',
@@ -204,6 +209,10 @@ export default {
         })
       }
     },
+  components:{
+    'el-input':Input,'el-button':Button,'el-table':Table,'el-table-column':TableColumn,'el-row':Row,
+    'el-form':Form,'el-form-item':FormItem,'el-dialog':Dialog,'el-message':Message
+  }
 }
 </script>
 
