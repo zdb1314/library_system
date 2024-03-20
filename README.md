@@ -14,7 +14,7 @@
 ## 系统模块
 
 ~~~
-per.zdb     
+per.zdb
 ├── vue-client            // 前端框架 [80]
 ├── app-api               // app接口模块 [8091]
 ├── ruoyi-modules         // 业务模块
@@ -49,8 +49,8 @@ per.zdb
 
 - [git](https://git-scm.com/)
 - [java8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-- [maven](http://maven.apache.org/) 
-- [docker](http://www.docker.com/) 
+- [maven](http://maven.apache.org/)
+- [docker](http://www.docker.com/)
 
 ### 开发环境搭建
 
@@ -72,3 +72,14 @@ per.zdb
 
 6. 构建Docker镜像并运行业务模块容器
 `docker-compose\deploy.sh modules`
+
+### 单元测试
+**前端单元测试：**
+
+1，单元测试命令：`npm run test`
+
+2，测试代码位置：library_system\vue-client\test\unit\specs
+
+**后端单元测试：**
+
+测试代码位置：library_system\module\模块名\src\test

@@ -15,6 +15,9 @@ public class CommonTest {
     @Autowired
     private IBookService bookService;
 
+    /**
+     * 测试新增功能
+     */
     @Test
     public void add() {
         Book book = new Book();
@@ -24,11 +27,17 @@ public class CommonTest {
         bookService.save(book);
     }
 
+    /**
+     * 测试删除功能
+     */
     @Test
     public void delete() {
         bookService.removeById(1);
     }
 
+    /**
+     * 测试更新功能
+     */
     @Test
     public void update() {
         Book book = bookService.getById(1);
@@ -36,6 +45,9 @@ public class CommonTest {
         bookService.updateById(book);
     }
 
+    /**
+     * 测试获取功能
+     */
     @Test
     public void get() {
         Book book = bookService.getById(1);
