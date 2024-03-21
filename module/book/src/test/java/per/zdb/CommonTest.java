@@ -1,5 +1,6 @@
 package per.zdb;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,13 @@ public class CommonTest {
     @Test
     public void add() {
         Book book = new Book();
-        book.setTitle("time");
-        book.setAuthor("Adobe Chow");
-        book.setRemark("It teach you how to use your time.");
-        bookService.save(book);
+        book.setId(1);
+        book.setTitle("孙子兵法");
+        book.setAuthor("孙武");
+        book.setRemark("是中国春秋时期一部古典的军事著作，也是现存最早的兵书。作者是孙武。");
+        boolean ok = bookService.save(book);
+
+        Assert.assertTrue("新增图书失败",ok);
     }
 
     /**
@@ -32,7 +36,9 @@ public class CommonTest {
      */
     @Test
     public void delete() {
-        bookService.removeById(1);
+        boolean ok = bookService.removeById(1);
+
+        Assert.assertTrue("删除图书失败",ok);
     }
 
     /**
@@ -40,9 +46,16 @@ public class CommonTest {
      */
     @Test
     public void update() {
-        Book book = bookService.getById(1);
-        book.setTitle("time update");
-        bookService.updateById(book);
+        Book book = bookService.lambdaQuery()
+                .last(" limit 1")
+                .one();
+        Assert.assertNotNull("获取图书失败",book);
+
+        book.setTitle(book.getTitle()+" update");
+
+        boolean ok = bookService.updateById(book);
+
+        Assert.assertTrue("修改图书失败",ok);
     }
 
     /**
@@ -50,8 +63,10 @@ public class CommonTest {
      */
     @Test
     public void get() {
-        Book book = bookService.getById(1);
-        System.out.println(book);
+        Book book = bookService.lambdaQuery()
+                .last(" limit 1")
+                .one();
+        Assert.assertNotNull("获取图书失败",book);
     }
 
 
