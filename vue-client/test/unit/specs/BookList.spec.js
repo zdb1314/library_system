@@ -30,30 +30,54 @@ let bookListResponse = {
   ]
 }
 
-let deleteResponse = {
+let successResponse = {
   "code": 0,
   "msg": "操作成功"
 }
 
 let mock = new MockAdapter(Vue.prototype.$axios)
 
+//模拟查询列表接口
 mock.onPost('/book/list').reply(200,bookListResponse)
 
+//模拟删除接口
 mock.onPost('/book/delete').reply(config=>{
   return new Promise((resolve,reject)=>{
     //删除第一个数组
     bookListResponse.data.pop()
-    resolve([200,deleteResponse])
+    resolve([200,successResponse])
   })
 })
 
+//模拟新增接口
 mock.onPost('/book/add').reply(config=>{
   return new Promise((resolve,reject)=>{
     let book = JSON.parse(config.data);
     //添加数组
     book.id=new Date().getTime()
     bookListResponse.data.push(book)
-    resolve([200,deleteResponse])
+    resolve([200,successResponse])
+  })
+})
+
+//模拟获取图书接口
+mock.onGet('/book/get/1').reply(config=>{
+  return new Promise((resolve,reject)=>{
+    let book = bookListResponse.data[0];
+    resolve([200,{
+      "code": 0,
+      "msg": "操作成功",
+      "data": book
+    }])
+  })
+})
+
+//模拟更新图书接口
+mock.onPost('/book/update').reply(config=>{
+  return new Promise((resolve,reject)=>{
+    let book = JSON.parse(config.data);
+    bookListResponse.data[0]=book;
+    resolve([200,successResponse])
   })
 })
 
@@ -121,6 +145,36 @@ describe('测试BookList.vue页面', () => {
     let tr = trs.at(trs.length-1)
     //校验天龙八部是否添加成功
     expect(tr.text()).toContain("天龙八部")
+  })
+
+
+  it('测试修改功能',async ()=> {
+    //延迟等待接口处理完
+    await new Promise(res => setTimeout(res, 100))
+    //获取新增按钮
+    let editBtn = wrapper.find("tbody").find("tr").find(".edit-btn");
+    await editBtn.trigger("click");
+    
+    let bookDialog = wrapper.find(".book-dialog")
+
+    //延迟等待接口处理完
+    await new Promise(res => setTimeout(res, 100))
+
+    let titleInput = bookDialog.find(".title-input").find("input")
+    titleInput.setValue("新红楼梦")
+
+    let saveBtn = bookDialog.find(".save-btn")
+    saveBtn.trigger("click")
+
+    //延迟等待接口处理完
+    await new Promise(res => setTimeout(res, 100))
+
+    //获取所有tr组件
+    let trs = wrapper.find("tbody").findAll("tr");
+    //获取最后一个数组
+    let tr = trs.at(0)
+    //校验天龙八部是否添加成功
+    expect(tr.text()).toContain("新红楼梦")
   })
 
 
